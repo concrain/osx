@@ -4,6 +4,7 @@
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 # validate the install
+brew prune
 brew doctor
 
 # validate x-code
@@ -21,19 +22,6 @@ brew install git
 brew install tig
 brew install maven
 
-# install docker with xhyve and docker machine
-# https://pilsniak.com/how-to-install-docker-on-mac-os-using-brew/
-brew install docker docker-compose docker-machine xhyve docker-machine-driver-xhyve
-sudo chown root:wheel $(brew --prefix)/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
-sudo chmod u+s $(brew --prefix)/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
-docker-machine create default --driver xhyve --xhyve-experimental-nfs-share
-# set the default docker machine
-eval $(docker-machine env default)
-# start docker
-brew services start docker-machine
-docker version
-#docker-machine start default
-
 brew install nmap
 brew install links
 brew install geoip
@@ -44,12 +32,14 @@ brew install watch
 # https://caskroom.github.io/
 brew install cask 
 
-# manage java with homebrew
-brew install jenv
-brew cask search java
-
 # install JDK
+#wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz
+#sudo tar xvzf jdk-8u131-linux-x64.tar.gz
+
+brew tap caskroom/versions
+brew cask install java6
 brew cask install java8
+
 # TODO extract the version as a variable
 java -version
 
@@ -58,7 +48,7 @@ cd
 cat > .bash_profile << EOF
     alias ll='ls -l'
 
-    export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home
+    export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home
     export PATH=$PATH:$JAVA_HOME/bin
 
     export PATH="/usr/local/bin:$PATH"
@@ -112,7 +102,7 @@ source ~/.bash_profile
 # install node
   brew install node
   echo prefix=~/.npm-packages >> ~/.npmrc
-  chown -R <user-name> /usr/local/lib/node_modules/
+  chown -R $USER /usr/local/lib/node_modules/
   brew postinstall node 
 
 # swagger api code generator
