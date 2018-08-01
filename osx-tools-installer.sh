@@ -100,9 +100,14 @@ source ~/.bash_profile
   sdk install grails
 
 # install node
+  rm -rf /usr/local/lib/node_modules
+  brew cleanup
+  brew link node
+  brew uninstall node
+
   brew install node
   echo prefix=~/.npm-packages >> ~/.npmrc
-  chown -R $USER /usr/local/lib/node_modules/
+  chown -R $(whoami) /usr/local/lib/node_modules/
   brew postinstall node 
 
 # swagger api code generator
