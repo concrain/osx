@@ -8,7 +8,7 @@ brew prune
 brew doctor
 
 # validate x-code
-  xcode-select -p
+xcode-select -p
 
 # install basic command-line tools
 brew install wget
@@ -98,6 +98,13 @@ source ~/.bash_profile
   sdk install groovy
   sdk install springboot
   sdk install grails
+
+# hoverfly
+  # https://hoverfly.readthedocs.io/en/latest/pages/introduction/gettingstarted.html
+  brew install SpectoLabs/tap/hoverfly
+  brew upgrade hoverfly
+  hoverctl version
+  hoverfly -version
 
 # install node
   rm -rf /usr/local/lib/node_modules
