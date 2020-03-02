@@ -39,6 +39,7 @@ brew install cask
 brew tap caskroom/versions
 brew cask install java6
 brew cask install java8
+brew cask install java11
 
 # TODO extract the version as a variable
 java -version
@@ -48,7 +49,7 @@ cd
 cat > .bash_profile << EOF
     alias ll='ls -l'
 
-    export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home
+    export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk-11.*.jdk/Contents/Home
     export PATH=$PATH:$JAVA_HOME/bin
 
     export PATH="/usr/local/bin:$PATH"
