@@ -26,12 +26,24 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 # set your .zshrc
 cd
 cat > .zshrc << EOF
+
+    alias show-cmds='cd && cat alias-config.txt'
+
     alias ll='ls -l'
+
     alias swagger-up='cd ~/docker/swagger/ && docker-compose up'
     alias swagger-down='cd ~/docker/swagger/ && docker-compose down'
 
+
+
+    alias casandra-up='cd ~/docker/casandra/ && docker-compose up'
+    alias casandra-down='cd ~/docker/casandra/ && docker-compose down'
+
     alias mysql-up='cd ~/docker/mysql/ && docker-compose up'
     alias mysql-down='cd ~/docker/mysql/ && docker-compose down'
+
+    alias postgres-up='cd ~/docker/postgres/ && docker-compose up'
+    alias postgres-down='cd ~/docker/postgres/ && docker-compose down'
 
     alias mongo-up='cd ~/docker/mongo/ && docker-compose up'
     alias mongo-down='cd ~/docker/mongo/ && docker-compose down'
@@ -39,14 +51,59 @@ cat > .zshrc << EOF
     alias redis-up='cd ~/docker/redis/ && docker-compose up'
     alias redis-down='cd ~/docker/redis/ && docker-compose down'
 
+
+
+    alias nifi-up='cd ~/docker/nifi/ && docker-compose up && sh runner-cmd.sh'
+    alias nifi-down='cd ~/docker/nifi/ && docker-compose down'
+
+
+
+    alias zookeeper-up='cd ~/docker/zookeeper/ && docker-compose up && sh runner-cmd.sh'
+    alias zookeeper-cli='cd ~/docker/zookeeper/ && docker-compose up exec zookeeper-cli zkCli.sh -server zookeeper:2181'
+    alias zookeeper-down='cd ~/docker/zookeeper/ && docker-compose down'
+
+    alias zeppelin-up='cd ~/docker/zeppelin/ && docker-compose up && sh runner-cmd.sh'
+    alias zeppelin-down='cd ~/docker/zeppelin/ && docker-compose down'
+
+
+
     alias rabbit-up='cd ~/docker/rabbitMQ/ && docker-compose up'
     alias rabbit-down='cd ~/docker/rabbitMQ/ && docker-compose down'
 
     alias kafka-up='cd ~/docker/kafka/ && docker-compose up'
     alias kafka-down='cd ~/docker/kafka/ && docker-compose down'
 
-    alias elasticsearch-up='cd ~/docker/elasticsearch/ && docker-compose up'
-    alias elasticsearch-down='cd ~/docker/elasticsearch/ && docker-compose down'
+
+
+    alias nginx-up='cd ~/docker/nginx/ && docker-compose up && sh runner-cmd.sh'
+    alias nginx-cli='cd ~/docker/nginx && docker-compose run cli'
+    alias nginx-down='cd ~/docker/nginx/ && docker-compose down'
+
+    alias oauth2-up='cd ~/docker/oauth2/ && docker-compose up'
+    alias oauth2-down='cd ~/docker/oauth2/ && docker-compose down'
+
+
+
+    alias prometheus-up='cd ~/docker/prometheus/ && docker-compose up && sh runner-cmd.sh'
+    alias prometheus-down='cd ~/docker/prometheus/ && docker-compose down'
+
+    alias grafana-up='cd ~/docker/grafana/ && docker-compose up && sh runner-cmd.sh'
+    alias grafana-down='cd ~/docker/grafana/ && docker-compose down'
+
+
+
+    alias efk-up='cd ~/docker/efk/ && docker-compose up && sh runner-cmd.sh'
+    alias efk-down='cd ~/docker/efk/ && docker-compose down'
+
+    alias elk-up='cd ~/docker/elk/ && docker-compose up && sh runner-cmd.sh'
+    alias elk-down='cd ~/docker/elk/ && docker-compose down'
+
+
+
+    solr-up='cd ~/docker/solr/ && docker-compose up && sh runner-cmd.sh'
+    solr-down='cd ~/docker/solr/ && docker-compose down'
+
+
 
     #export JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/
     export JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-15.jdk/Contents/Home/
@@ -55,6 +112,7 @@ cat > .zshrc << EOF
     export PATH="/usr/local/sbin:$PATH"
     export PATH=$PATH:$JAVA_HOME/bin
     export PATH="/usr/local/Cellar/:$PATH"
+    export PATH=$PWD/bin:$PATH
     export SDKMAN_DIR="$HOME/.sdkman"
     export PATH
 
@@ -116,16 +174,23 @@ brew install htop
 
 
 
+brew install graphviz
+brew install youTube-dl
+
+
 
 
 # build tools
 brew install git
 brew install maven
+brew install ansible
+brew install terraform
+brew install jmeter
 
 
 
-
-# https://caskroom.github.io/
+# install java
+  # https://caskroom.github.io/
   brew install cask
   brew tap homebrew/cask-versions
   brew tap homebrew/cask
@@ -153,6 +218,26 @@ brew install maven
    #brew update
    #brew doctor
 ##################################
+
+
+
+
+
+# install rust
+  brew install rustup
+  rustup-init
+  rustc --version
+
+
+
+
+
+
+# install go
+  brew install go
+  go version
+
+
 
 
 
@@ -185,10 +270,9 @@ brew install maven
 
 
 
-
-# install postman
-brew install --cask postman
-open /Applications/Postman.app
+# install obs
+brew install --cask obs
+Open /Applications/Obs.app
 
 # install sourcetrail
 brew install --cask sourcetrail
@@ -217,6 +301,8 @@ open /Applications/Brackets.app
 # install bootstrap-studio
 brew install --cask bootstrap-studio
 open /Applications/Bootstrap\ Studio.app
+
+
 
 
 
@@ -261,11 +347,20 @@ minikube stop
 
 
 
+  # install istio ~ service mesh for Kubernetes
+  # https://kishoreteach.medium.com/set-up-istio-on-minikube-in-5-steps-get-sample-application-up-and-running-8396daf30dd6	
+brew install istioctl
+curl -L https://git.io/getLatestIstio | sh -
+
+for i in install/kubernetes/helm/istio-init/files/crd*yaml;
+      do kubectl apply -f $i; done
+
+  # verify install
+kubectl get crd | grep istio
 
 
-
-# install lens
-brew install --cask lens
+  # install lens ~ ide for kubernetes
+brew install --cask openlens
 open /Applications/Lens.app
 
 
@@ -273,12 +368,17 @@ open /Applications/Lens.app
 
 
 
+
+
 # install docker
-brew install --cask docker && brew install bash-completion docker-completion docker-compose-completion
+brew install --cask docker && brew install docker-compose && brew install bash-completion docker-completion docker-compose-completion
 open /Applications/Docker.app
 brew link --overwrite docker-completion
 brew doctor
 docker run -d -p 80:80 docker/getting-started
+
+
+
 
 
 
@@ -295,6 +395,16 @@ docker run -d -p 80:80 docker/getting-started
   hoverctl start
   hoverctl logs
   hoverctl stop
+
+
+# install postman
+brew install --cask postman
+open /Applications/Postman.app
+
+
+# install wireshark
+brew install wireshark
+open /Applications/Wireshark.app
 
 
 
