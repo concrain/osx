@@ -1,0 +1,83 @@
+alias casandra-up='cd ~/docker/casandra/ && docker-compose up'
+alias casandra-down='cd ~/docker/casandra/ && docker-compose down'
+
+alias mysql-up='cd ~/docker/mysql/ && docker-compose up'
+alias mysql-down='cd ~/docker/mysql/ && docker-compose down'
+
+alias postgres-up='cd ~/docker/postgres/ && docker-compose up'
+alias postgres-down='cd ~/docker/postgres/ && docker-compose down'
+
+alias mongo-up='cd ~/docker/mongo/ && docker-compose up'
+alias mongo-down='cd ~/docker/mongo/ && docker-compose down'
+
+alias redis-up='cd ~/docker/redis/ && docker-compose up'
+alias redis-down='cd ~/docker/redis/ && docker-compose down'
+
+
+
+alias rabbit-up='cd ~/docker/rabbitMQ/ && docker-compose up'
+alias rabbit-down='cd ~/docker/rabbitMQ/ && docker-compose down'
+
+alias kafka-up='cd ~/docker/kafka/ && docker-compose up'
+alias kafka-down='cd ~/docker/kafka/ && docker-compose down'
+
+
+
+alias nginx-up='cd ~/docker/nginx/ && docker-compose up && sh runner-cmd.sh'
+alias nginx-cli='cd ~/docker/nginx && docker-compose run cli'
+alias nginx-down='cd ~/docker/nginx/ && docker-compose down'
+
+alias oauth2-up='cd ~/docker/oauth2/ && docker-compose up'
+alias oauth2-down='cd ~/docker/oauth2/ && docker-compose down'
+
+alias swagger-up='cd ~/docker/swagger/ && docker-compose up'
+alias swagger-down='cd ~/docker/swagger/ && docker-compose down'
+
+
+
+alias prometheus-up='cd ~/docker/prometheus/ && docker-compose up && sh runner-cmd.sh'
+alias prometheus-down='cd ~/docker/prometheus/ && docker-compose down'
+
+alias grafana-up='cd ~/docker/grafana/ && docker-compose up && sh runner-cmd.sh'
+alias grafana-down='cd ~/docker/grafana/ && docker-compose down'
+
+
+
+alias efk-up='cd ~/docker/efk/ && docker-compose up && sh runner-cmd.sh'
+alias efk-down='cd ~/docker/efk/ && docker-compose down'
+
+alias elk-up='cd ~/docker/elk/ && docker-compose up && sh runner-cmd.sh'
+alias elk-down='cd ~/docker/elk/ && docker-compose down'
+
+
+alias solr-up='cd ~/docker/solr/ && docker-compose up && sh runner-cmd.sh'
+alias solr-down='cd ~/docker/solr/ && docker-compose down'
+
+alias elasticsearch-up='cd ~/docker/elasticsearch/ && docker-compose up && sh runner-cmd.sh'
+alias elasticsearch-down='cd ~/docker/elasticsearch/ && docker-compose down'
+
+
+
+alias jaeger-up='cd ~/docker/jaeger/ && docker-compose up && sh runner-cmd.sh'
+alias jaeger-down='cd ~/docker/jaeger/ && docker-compose down'
+
+
+
+alias openproject-up='cd ~/docker/openproject/ && docker-compose up -d && sh runner-cmd.sh'
+alias openproject-down='cd ~/docker/openproject/ && docker-compose down'
+
+
+
+alias zeppelin-up='cd ~/docker/zeppelin/ && docker-compose up && sh runner-cmd.sh'
+alias zeppelin-down='cd ~/docker/zeppelin/ && docker-compose down'
+
+
+
+alias nifi-up='cd ~/docker/nifi/ && docker-compose up && sh runner-cmd.sh'
+alias nifi-down='cd ~/docker/nifi/ && docker-compose down'
+
+
+
+alias zookeeper-up='cd ~/docker/zookeeper/ && docker-compose up && sh runner-cmd.sh'
+alias zookeeper-cli='cd ~/docker/zookeeper/ && docker-compose up exec zookeeper-cli zkCli.sh -server zookeeper:2181'
+alias zookeeper-down='cd ~/docker/zookeeper/ && docker-compose down'
