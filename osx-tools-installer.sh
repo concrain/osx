@@ -190,22 +190,6 @@ brew install graphviz
 # cli youtube downloader   https://github.com/ytdl-org/youtube-dl
 brew install youTube-dl
 
-# build tools
-brew install git
-brew install maven
-
-# automation tool   https://docs.ansible.com/
-brew install ansible
-ansible --version
-# infrastructure tool   https://developer.hashicorp.com/terraform
-brew tap hashicorp/tap
-brew install hashicorp/tap/terraform
-terraform --version
-
-# java performance/load testing   https://jmeter.apache.org/
-brew install jmeter
-
-
 
 # https://caskroom.github.io/
 brew install cask
@@ -291,6 +275,24 @@ which python3
 
 
 
+# build tools
+brew install git
+brew install maven
+
+# automation tool   https://docs.ansible.com/
+brew install ansible
+ansible --version
+# infrastructure tool   https://developer.hashicorp.com/terraform
+brew tap hashicorp/tap
+brew install hashicorp/tap/terraform
+terraform --version
+
+# java performance/load testing java applications   https://jmeter.apache.org/
+brew install jmeter
+
+
+
+
 # install docker
 # brew install --cask docker
 brew install docker
@@ -349,6 +351,12 @@ minikube stop
 # https://kishoreteach.medium.com/set-up-istio-on-minikube-in-5-steps-get-sample-application-up-and-running-8396daf30dd6
 brew install istioctl
 istioctl version
+
+# load testing for kubernetes    https://k6.io/
+brew install k6
+k6 version
+
+
 
   # demo to get started
 #istioctl install --set profile=demo -y
