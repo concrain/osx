@@ -1,5 +1,8 @@
 #!bin/bash
 
+echo "enter your password:"
+read -s password
+
 # install command line tools
 xcode-select --install
 
@@ -11,13 +14,13 @@ softwareupdate --all --install --force
 /Library/Developer/CommandLineTools/usr/bin/clang --version
 
 
+
 # install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # set your .zshrc
 cd
 cat > .zshrc << EOF
-
 
 alias show-cmds='cd && cat alias-config.txt'
 
@@ -182,21 +185,24 @@ brew install wget
 brew install tree
 brew install htop
 
-# create diagrams/graphs
+# create diagrams/graphs   https://graphviz.org/
 brew install graphviz
-# cli youtube downloader https://github.com/ytdl-org/youtube-dl
+# cli youtube downloader   https://github.com/ytdl-org/youtube-dl
 brew install youTube-dl
 
 # build tools
 brew install git
 brew install maven
 
-# automation tool
+# automation tool   https://docs.ansible.com/
 brew install ansible
-# infrastructure tool
-brew install terraform
+ansible --version
+# infrastructure tool   https://developer.hashicorp.com/terraform
+brew tap hashicorp/tap
+brew install hashicorp/tap/terraform
+terraform --version
 
-# java performance/load testing
+# java performance/load testing   https://jmeter.apache.org/
 brew install jmeter
 
 
@@ -217,6 +223,31 @@ brew install openjdk@21
 sudo mkdir -p /Library/Java/JavaVirtualMachines
 sudo ln -sfn /usr/local/opt/openjdk@8/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-8.jdk
 sudo ln -sfn /usr/local/opt/openjdk@21/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-21.jdk
+
+
+
+
+casks=(
+  wireshark
+  postman
+  google-chrome
+  slack
+  docker
+  openlens
+  brackets
+  bootstrap-studio
+  dbeaver-community
+  atom
+  visual-studio-code
+  intellij-idea-ce
+  sourcetrail
+  obs
+)
+for cask in "${casks[@]}"; do
+  echo " installing $cask..."
+  echo "$password" | sudo -S brew install --cask $cask
+done
+
 
 
 
@@ -254,48 +285,14 @@ which python3
 
   # install node
 #brew install node
-  # install jhipster
+  # install jhipster   https://www.jhipster.tech/
 #npm install -g generator-jhipster
-
-
-
-# install obs ~ screencast and record video
-brew install --cask obs
-Open /Applications/OBS.app
-
-# install sourcetrail
-brew install --cask sourcetrail
-open /Applications/Sourcetrail.app
-
-# install intellij
-brew install --cask intellij-idea-ce
-open /Applications/IntelliJ\ IDEA\ CE.app
-
-# install vscode
-brew install --cask visual-studio-code
-open /Applications/Visual\ Studio\ Code.app
-
-# install atom
-brew install --cask atom
-open /Applications/Atom.app
-
-# install dbeaver
-brew install --cask dbeaver-community
-open /Applications/Dbeaver.app
-
-# install brackets
-brew install --cask brackets
-open /Applications/Brackets.app
-
-# install bootstrap-studio
-brew install --cask bootstrap-studio
-open /Applications/Bootstrap\ Studio.app
 
 
 
 
 # install docker
-brew install --cask docker
+# brew install --cask docker
 brew install docker
 brew install docker-compose
 
@@ -359,7 +356,7 @@ istioctl version
 #kubectl get pods -n istio-system
 
   # install lens ~ IDE for kubernetes
-brew install --cask openlens
+# brew install --cask openlens
 open /Applications/OpenLens.app
 
 
@@ -397,11 +394,51 @@ brew install hoverfly
    #hoverctl version
 
 # install postman ~ local api development and testing, with security features
-brew install --cask postman
+# brew install --cask postman
 open /Applications/Postman.app
 
+
+
+
 # install wireshark ~ network traffic monitoring tool, packet analyzer
-brew install wireshark
-brew install termshark
-termshark -v
+# brew install --cask wireshark
 open /Applications/Wireshark.app
+
+
+# install obs ~ screencast and record video
+# brew install --cask obs
+Open /Applications/OBS.app
+
+
+
+
+# install sourcetrail
+# brew install --cask sourcetrail
+open /Applications/Sourcetrail.app
+
+# install intellij
+# brew install --cask intellij-idea-ce
+open /Applications/IntelliJ\ IDEA\ CE.app
+
+# install vscode
+# brew install --cask visual-studio-code
+open /Applications/Visual\ Studio\ Code.app
+
+# install atom
+# brew install --cask atom
+open /Applications/Atom.app
+
+# install dbeaver
+# brew install --cask dbeaver-community
+open /Applications/Dbeaver.app
+
+
+
+
+# install bootstrap-studio
+# brew install --cask bootstrap-studio
+open /Applications/Bootstrap\ Studio.app
+
+# install brackets
+# brew install --cask brackets
+open /Applications/Brackets.app
