@@ -261,7 +261,7 @@ which python3
 
 # install obs ~ screencast and record video
 brew install --cask obs
-Open /Applications/Obs.app
+Open /Applications/OBS.app
 
 # install sourcetrail
 brew install --cask sourcetrail
@@ -269,7 +269,7 @@ open /Applications/Sourcetrail.app
 
 # install intellij
 brew install --cask intellij-idea-ce
-open /Applications/Intellij\ IDEA.app
+open /Applications/IntelliJ\ IDEA\ CE.app
 
 # install vscode
 brew install --cask visual-studio-code
@@ -360,7 +360,7 @@ istioctl version
 
   # install lens ~ IDE for kubernetes
 brew install --cask openlens
-open /Applications/Lens.app
+open /Applications/OpenLens.app
 
 
 
