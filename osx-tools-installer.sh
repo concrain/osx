@@ -96,7 +96,7 @@ alias openproject-down='cd ~/docker/openproject/ && docker-compose down'
 
 
 
-alias zeppelin-up='cd ~/docker/zeppelin/ && docker-compose up && sh runner-cmd.sh'
+alias zeppelin-up='cd ~/docker/zeppelin/ && sh start-zeppelin.sh && sh runner-cmd.sh'
 alias zeppelin-down='cd ~/docker/zeppelin/ && docker-compose down'
 
 
@@ -190,10 +190,12 @@ brew install youTube-dl
 # build tools
 brew install git
 brew install maven
+
 # automation tool
 brew install ansible
 # infrastructure tool
 brew install terraform
+
 # java performance/load testing
 brew install jmeter
 
