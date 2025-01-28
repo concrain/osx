@@ -133,7 +133,7 @@ switch_java() {
 
 export JAVA_HOME=/usr/local/opt/openjdk@8
 export VCPKG_ROOT="$HOME/vcpkg"
-export PATH="/usr/local/bin:/usr/local/sbin:$JAVA_HOME/bin:/usr/local/Cellar:$VCPKG_ROOT:$PATH"
+export PATH="/usr/local/bin:/usr/local/sbin:$JAVA_HOME/bin:/usr/local/Cellar:$VCPKG_ROOT:/usr/local/anaconda3/bin:$PATH"
 export SDKMAN_DIR="$HOME/.sdkman"
 
 
@@ -226,6 +226,7 @@ casks=(
   intellij-idea-ce
   sourcetrail
   obs
+  anaconda
 )
 for cask in "${casks[@]}"; do
   echo " installing $cask..."
@@ -270,6 +271,14 @@ vcpkg --version
 # install python
 brew reinstall python
 which python3
+# package manager simular to maven
+brew install poetry
+poetry --version
+# package manager that can handle python and other languages [ used in datascience ]
+# brew install --cask anaconda
+conda --version
+
+
 
 
 
@@ -284,6 +293,7 @@ which python3
 # build tools
 brew install git
 brew install maven
+mvn -v
 
 
 # automation tool   https://docs.ansible.com/
