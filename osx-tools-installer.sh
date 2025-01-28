@@ -100,7 +100,7 @@ alias openproject-down='cd ~/docker/openproject/ && docker-compose down'
 
 
 alias zeppelin-up='cd ~/docker/zeppelin/ && sh start-zeppelin.sh && sh runner-cmd.sh'
-alias zeppelin-down='cd ~/docker/zeppelin/ && docker-compose down'
+alias zeppelin-down='cd ~/docker/zeppelin/ && docker stop zeppelin'
 
 
 
@@ -131,9 +131,9 @@ switch_java() {
     echo "Switched to Java $1"
 }
 
-# default JAVA_HOME to OpenJDK 8
 export JAVA_HOME=/usr/local/opt/openjdk@8
-export PATH="/usr/local/bin:/usr/local/sbin:$JAVA_HOME/bin:/usr/local/Cellar:$PATH"
+export VCPKG_ROOT="$HOME/vcpkg"
+export PATH="/usr/local/bin:/usr/local/sbin:$JAVA_HOME/bin:/usr/local/Cellar:$VCPKG_ROOT:$PATH"
 export SDKMAN_DIR="$HOME/.sdkman"
 
 
@@ -249,7 +249,8 @@ sdk install micronaut
 
 
 # install rust
-brew install rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+rustup update
 rustc --version
 # install the package manager for rust
 cargo --version
@@ -260,6 +261,11 @@ go version
 
 # verify c++ version from xcode
 clang++ --version
+# package manager for c++
+git clone https://github.com/microsoft/vcpkg "$HOME/vcpkg"
+cd "$HOME/vcpkg"
+./bootstrap-vcpkg.sh
+vcpkg --version
 
 # install python
 brew reinstall python
@@ -279,9 +285,12 @@ which python3
 brew install git
 brew install maven
 
+
 # automation tool   https://docs.ansible.com/
 brew install ansible
 ansible --version
+
+
 # infrastructure tool   https://developer.hashicorp.com/terraform
 brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
@@ -328,6 +337,8 @@ brew install kubectl
 minikube delete
 minikube start
 
+
+
 # test sample service
 kubectl delete deployment hello-minikube
 kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.10
@@ -347,10 +358,14 @@ minikube dashboard
 # stop
 minikube stop
 
+
+
 # install istio ~ service mesh for Kubernetes
 # https://kishoreteach.medium.com/set-up-istio-on-minikube-in-5-steps-get-sample-application-up-and-running-8396daf30dd6
 brew install istioctl
 istioctl version
+
+
 
 # load testing for kubernetes    https://k6.io/
 brew install k6
@@ -370,6 +385,11 @@ open /Applications/OpenLens.app
 
 
 
+
+
+# install postman ~ local api development and testing, with security features
+# brew install --cask postman
+open /Applications/Postman.app
 
 
 # install hoverfly ~ local api mocking, recording, replaying api server traffic
@@ -400,10 +420,6 @@ brew install hoverfly
    #hoverctl health
    #hoverctl logs
    #hoverctl version
-
-# install postman ~ local api development and testing, with security features
-# brew install --cask postman
-open /Applications/Postman.app
 
 
 
