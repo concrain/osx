@@ -260,6 +260,13 @@ cargo --version
 brew install go
 go version
 
+brew install protobuf
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+
+
 # verify c++ version from xcode
 clang++ --version
 # package manager for c++
@@ -329,51 +336,194 @@ docker run -d -p 80:80 --name docker-demo docker/getting-started
 
 
 # kubernetes
+
+# Pod:	runs a single application container
+#   Single instance of an application process
+#   Smallest unit of deployment; ephemeral and can be rescheduled
+  kubectl get pods -n default
+  kubectl delete pod <name>
+
+  kubectl run <pod-name> --image=<image-name>
+  kubectl expose pod <pod-name> --type=<service-type> --port=<port>
+
+# Deployment:  manages a set of pods (replicas)
+#   Manages multiple pods over time
+#   Ensures desired number of pods are running, handles scaling and updates
+  kubectl get deployments -n default
+  kubectl delete deployment <name>
+
+  kubectl create deployment <name> --image=
+  kubectl expose deployment <name> --type=
+
+# Service:	provides a stable access point to a set of pods
+#   A group of pods, abstracted via a network endpoint
+#   Load balancing, DNS resolution, and access point for pods
+  kubectl get services -n default
+  kubectl delete service <name>
+  # --name=<service-name> name the service you are creating  [ you dont run kubectl create service <name> ]
+  kubectl expose pod <pod-name> --name=<service-name> --port=<port> --type=NodePort
+
+  # --type=NodePort is only used for MINIKUBE on a local machine
+  # production environments (e.g., GKE, EKS, AKS) might use different service types, such as:
+    # LoadBalancer: For automatic external load balancing (with cloud integration)
+    # ClusterIP: For internal-only access within the Kubernetes cluster
+
+
+
+
   # install minikube
 brew install minikube
 minikube version
 
-minikube addons enable metrics-server
-
-# use docker vs hypervisor as default engine
-minikube config set driver docker
-eval $(minikube docker-env)
-minikube status
-
 # command line controls
 brew install kubectl
-
-# start - no proxy needed
+# changes will take effect upon a minikube delete and then a minikube start
 minikube delete
 minikube start
+minikube status
 
+# check resources available
+kubectl describe node minikube
+minikube delete
+# allocate memory and cpu
+minikube start --memory=8192 --cpus=4
+
+
+minikube addons enable metrics-server
+# verify the metrics webserver
+kubectl get pods -n kube-system
+kubectl get apiservices | grep metrics
+kubectl top nodes
+kubectl top pods
+
+
+# docker vs hyperit as default engine
+# minikube start --driver=docker
+# minikube config set driver docker
+
+brew install hyperkit
+hyperkit -version
+
+minikube start --driver=hyperkit
+minikube config set driver hyperkit
+# changes will take effect upon a minikube delete and then a minikube start
+minikube delete
+minikube start
+# docker-env is how kubernetes connects to docker
+eval $(minikube docker-env)
+echo $(minikube docker-env)
+minikube status
 
 
 # test sample service
-kubectl delete deployment hello-minikube
 kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.10
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+minikube service hello-minikube
+
+# check running services
+kubectl get svc
+# inspect running pods
+kubectl get pods -o wide
+# manually access the NodePort   [ this should automatically happen when the service is started ]
+minikube ip
+# http://<minikube-ip>:<port>
+
+# update the sevice to different version  1.10 ->
 kubectl set image deployment/hello-minikube echoserver=k8s.gcr.io/echoserver:1.10
 
-# check the config file
+
+# use-context
+  # you might have different clusters to interact with [ minikube, development, staging, production ]
+  # you can switch between these clusters without manually editing your kubeconfig file
+  # the command kubectl config use-context minikube sets the active context to your Minikube cluster
+  # to switch to another named cluster using kubectl config use-context, the cluster must already be defined in your kubeconfig file
 kubectl config use-context minikube
+# kubectl config use-context staging
+# kubectl config use-context production
+
+# check the config file
 cat ~/.kube/config
 kubectl cluster-info
 
-	### example...
-	### -> Kubernetes control plane is running at https://192.168.64.2:8443
-	### -> CoreDNS is running at https://192.168.64.2:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-
-minikube dashboard
-
-# stop
-minikube stop
 
 
 
 # install istio ~ service mesh for Kubernetes
 # https://kishoreteach.medium.com/set-up-istio-on-minikube-in-5-steps-get-sample-application-up-and-running-8396daf30dd6
 brew install istioctl
-istioctl version
+  # istioctl install --set profile=default -y
+  istioctl install --set profile=demo -y
+kubectl get pods -n istio-system
+
+# enable sidecar injection  [ namespace default is the local cluster config. you can have other.. staging, production ]
+kubectl label namespace default istio-injection=enabled
+  # if sidecar has already been enabled but the cluster has restarted
+  kubectl label namespace default istio-injection=enabled --overwrite
+# restart pods with sidecars
+kubectl delete pod --all -n default
+# verify sidecars   [ istio-injection=enabled ]
+kubectl get pods -n default --show-labels
+
+
+# you must delete the existing deployment because is was not spun-up with istio
+kubectl get deployments -n default
+kubectl get services -n default
+
+# delete
+kubectl delete deployment hello-minikube
+kubectl delete service hello-minikube
+# create
+kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.10
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+# confirm
+kubectl get pods -n default
+kubectl get pods -n istio-system -l app=istio-ingressgateway
+
+
+# create new test deployment to load balance and canary with istio ingressgateway
+# deploy the following services:
+  # productpage (shows product details)
+  # ratings (stores product ratings)
+  # reviews (stores reviews)
+  # details (provides product details)
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/platform/kube/bookinfo.yaml
+
+# WAIT: for all sevices to start
+kubectl get pods -n default
+
+# expose the productpage service using istio ingressgateway
+# create an istio gateway and configure it to route traffic to the correct services (in this case, the productpage service)
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/networking/bookinfo-gateway.yaml
+
+# expose the service via istio ingressgateway
+# NAME                   TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)                                      AGE
+# istio-ingressgateway   LoadBalancer   10.103.74.52   <pending>     15021:30505/TCP,80:30654/TCP,443:30801/TCP   19h
+  # EXTERNAL-IP: will route traffic to your app. the port used by istio ingressgateway is typically 80
+  # MINIKUBE NOTE: minikube uses a NodePort, look for port 80    [ 80:<node-port> ]
+kubectl get svc istio-ingressgateway -n istio-system
+
+# access the productpage by navigating to the EXTERNAL-IP of the ingress gateway:
+  # MINIKUBE NOTE: get the cluster ip
+  minikube ip
+# MINIKUBE CMD
+http://<minikube-ip>:<nodeport>/productpage
+# KUBERNETES CMD
+http://<external-ip>/productpage
+
+# enable istio traffic management
+# this splits the traffic between two versions of the reviews service (v1 and v2), giving you a basic canary deployment setup
+# yaml file location:  </Users/concrain/git/istio-gateway/virtualservice.yaml>
+kubectl apply -f virtualservice.yaml
+# view the load ballencer through the logs
+  # reviews service (stores reviews)
+  kubectl get pods -n default -l app=reviews
+  # get details of pod
+  kubectl describe pod <service-name> -n default
+  kubectl describe pod reviews-v1-5c4d6d447c-sfqtw  -n default
+  # tail a pod
+  kubectl logs -f <service-name> -c istio-proxy -n default
+  kubectl logs -f reviews-v1-5c4d6d447c-sfqtw -c istio-proxy -n default
+
 
 
 
@@ -382,15 +532,23 @@ brew install k6
 k6 version
 
 
+# demo to get started
+istioctl install --set profile=demo -y
+# verify demo is installed
+kubectl get pods -n istio-system
 
-  # demo to get started
-#istioctl install --set profile=demo -y
-  # verify demo is installed
-#kubectl get pods -n istio-system
 
-  # install lens ~ IDE for kubernetes
+minikube dashboard
+# install lens ~ IDE for kubernetes
 # brew install --cask openlens
 open /Applications/OpenLens.app
+
+
+# delete sample service
+kubectl delete deployment hello-minikube
+kubectl delete service hello-minikube
+
+minikube stop
 
 
 
